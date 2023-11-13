@@ -1,0 +1,38 @@
+<?php
+
+namespace model;
+
+use PDO;
+
+class CompanyModel
+{
+    private $db;
+
+    function __construct() //instanciamos conexion con la base de datos
+    {
+        $this->db = new PDO('mysql:host=localhost;'.'dbname='.DB_NAME.';charset=utf8', DB_USER_NAME, DB_PASSWORD);
+    }
+
+    function getCompany() {
+        $select = $this->db->prepare("SELECT * FROM company");
+        $select->execute();
+        $company = $select->fetchAll(PDO::FETCH_OBJ);
+        return $company;
+    }
+
+    function getCompanyByID($id) {
+        $select = $this->db->prepare("SELECT * FROM company WHERE company_ID = ?");
+        $select->execute([$id]);
+        $company = $select->fetch(PDO::FETCH_OBJ);
+        return $company;
+    }
+
+    function insertCompany($companyName){
+        $select= $this->db->prepare('INSERT INTO company(company_ID, company_name) VALUES (NULL,?)');
+        $select->execute([$companyName]);
+    }
+
+
+}
+
+
