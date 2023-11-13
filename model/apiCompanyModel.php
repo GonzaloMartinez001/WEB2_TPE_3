@@ -30,8 +30,13 @@ class CompanyModel
     function insertCompany($companyName){
         $select= $this->db->prepare('INSERT INTO company(company_ID, company_name) VALUES (NULL,?)');
         $select->execute([$companyName]);
+        return $this->db->lastInsertId();
     }
 
+    function deleteCompany($id){
+        $select = $this->db->prepare('DELETE FROM company WHERE company_ID=?');
+        $select->execute([$id]);
+    }
 
 }
 
