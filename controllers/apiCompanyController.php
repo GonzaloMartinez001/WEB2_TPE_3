@@ -59,8 +59,19 @@ use model\CompanyModel;
                     $this->view->response('La tarea con id='.$id.' no existe.', 404);}
         }
 
-        function updateCompany($params = []) {
+        function editCompany($params = []) {
+        $id = $params[':ID'];
+        $body = $this->getData();
+        $company_name = $body->company_name;
+        $company = $this->companyModel->getCompanyByID($id);
+            if($company) {
 
+                $this->companyModel->editCompany($id,$company_name);
+                $this->view->response('La tarea con id='.$id.' ha sido modificada.', 200);
+            }
+            else {
+                $this->view->response('La tarea con id='.$id.' no existe.', 404);
+            }
         }
 
     }

@@ -10,6 +10,7 @@ $router->addRoute('companies', 'GET', 'controller\ApiCompanyController', 'getCom
 $router->addRoute('companies/:ID', 'GET', 'controller\ApiCompanyController', 'getCompany');
 $router->addRoute('companies', 'POST', 'controller\ApiCompanyController' , 'createCompany');
 $router->addRoute('companies/:ID', 'DELETE', 'controller\ApiCompanyController' , 'deleteCompany');
+$router->addRoute('companies/:ID', 'PUT', 'controller\ApiCompanyController' , 'editCompany');
 
 
 

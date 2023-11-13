@@ -38,6 +38,11 @@ class CompanyModel
         $select->execute([$id]);
     }
 
+    function editCompany($company_ID, $companyName){
+        $select = $this->db->prepare('UPDATE company SET company_name = ? WHERE company_ID = ?');
+        $select->execute([$companyName, $company_ID]);
+    }
+
 }
 
 
