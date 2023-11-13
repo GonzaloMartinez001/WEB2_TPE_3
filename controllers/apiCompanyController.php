@@ -23,7 +23,7 @@ use model\CompanyModel;
             if($companies)
                 $this->view->response($companies);
             else
-                $this->view->response("No se encontró ninguna compañía con el ID proporcionado.", 404);
+                $this->view->response("No se encontró ninguna compañía.", 404);
         }
 
         function getCompany($params = []) {
