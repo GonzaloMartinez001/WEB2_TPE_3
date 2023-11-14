@@ -75,7 +75,7 @@ use model\CompanyModel;
                 return false;
         }
 
-        public function getCompanies() { //No permite sql injection
+        public function getCompanies() { //No permite sql injection.
             try{
                 $sort = $_GET['sort'] ?? "company_ID";
                 $order = $_GET['order'] ?? "asc";
