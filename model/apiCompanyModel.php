@@ -43,6 +43,12 @@ class CompanyModel
         $select->execute([$companyName, $company_ID]);
     }
 
+    public function companiesByOrden($col, $order){
+        $query = $this->db->prepare("SELECT * FROM company ORDER BY  ".$col." ".$order );
+        $query->execute();
+        $companies = $query->fetchAll(PDO::FETCH_OBJ);
+        return $companies;
+    }
 
 }
 

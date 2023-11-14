@@ -12,18 +12,12 @@ use model\CompanyModel;
     {
 
         private $companyModel;
+        private $atributes;
 
         function __construct() {
             parent::__construct();
             $this->companyModel = new CompanyModel();
-        }
-
-        function getCompanies() {
-            $companies = $this->companyModel->getCompany();
-            if($companies)
-                $this->view->response($companies);
-            else
-                $this->view->response("No se encontró ninguna compañía.", 404);
+            $this->atributes = ['company_name'];
         }
 
         function getCompany($params = []) {
@@ -71,6 +65,33 @@ use model\CompanyModel;
             }
             else {
                 $this->view->response('La tarea con id='.$id.' no existe.', 404);
+            }
+        }
+
+        public function sanitized_column($column){
+            if (in_array($column, $this->atributes))
+                return true;
+            else
+                return false;
+        }
+
+        public function getCompanies() { //No permite sql injection
+            try{
+                $sort = $_GET['sort'] ?? "company_ID";
+                $order = $_GET['order'] ?? "asc";
+
+                if(!$this->sanitized_column($sort)||($order != "asc"&& $order!= "desc") )
+                    $this->view->response("Datos erroneos", 400);
+
+                $companies = $this->companyModel->companiesByOrden($sort, $order);
+                if(!empty($companies)){
+                    $this->view->response($companies, 200);
+                }
+                else{
+                    $this->view->response("No existe ninguna compania", 404);
+                }
+            }catch(Exception $exc){
+                $this->view->response("Error interno del servidor", 500);
             }
         }
 

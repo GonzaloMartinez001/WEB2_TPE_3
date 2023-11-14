@@ -20,14 +20,6 @@ class ApiGameController extends ApiController
         $this->atributes = ['game_name' , 'genre' , 'year' , 'score' , 'company_ID'];
     }
 
-   /* function getGames() {
-        $games = $this->gameModel->getGames();
-        if($games)
-            $this->view->response($games);
-        else
-            $this->view->response("No se encontró ningun juego.", 404);
-    }*/
-
     function getGamesByCompany($params = []){
         $id = $params[':ID'];
         $games = $this->gameModel->getGamesandCompany($id);
@@ -116,7 +108,7 @@ class ApiGameController extends ApiController
 
     public function getGames() { //No permite sql injection
         try{
-            $sort = $_GET['sort'] ?? "id";
+            $sort = $_GET['sort'] ?? "game_ID";
             $order = $_GET['order'] ?? "asc";
 
             if(!$this->sanitized_column($sort)||($order != "asc"&& $order!= "desc") )
