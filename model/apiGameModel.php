@@ -50,4 +50,14 @@ class ApiGameModel
         $select->execute([$gameName, $genre, $year, $score, $id]);
     }
 
+
+
+    public function gamesByOrden($col, $order){
+        $query = $this->db->prepare("SELECT * FROM games ORDER BY  ".$col." ".$order );
+        //die($query->queryString);
+        $query->execute();
+        $games = $query->fetchAll(PDO::FETCH_OBJ);
+        return $games;
+    }
+
 }

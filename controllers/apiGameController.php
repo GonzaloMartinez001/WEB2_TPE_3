@@ -12,20 +12,21 @@ class ApiGameController extends ApiController
 {
 
     private $companyModel;
-
+    private $atributes;
     function __construct()
     {
         parent::__construct();
         $this->gameModel = new ApiGameModel();
+        $this->atributes = ['game_name' , 'genre' , 'year' , 'score' , 'company_ID'];
     }
 
-    function getGames() {
+   /* function getGames() {
         $games = $this->gameModel->getGames();
         if($games)
             $this->view->response($games);
         else
             $this->view->response("No se encontró ningun juego.", 404);
-    }
+    }*/
 
     function getGamesByCompany($params = []){
         $id = $params[':ID'];
@@ -89,6 +90,47 @@ class ApiGameController extends ApiController
         }
         else {
             $this->view->response('El juego con id='.$id.' no existe.', 404);
+        }
+    }
+
+    public function sanitized_column($column){
+        if (in_array($column, $this->atributes))
+            return true;
+        else
+            return false;
+    }
+
+    public function getByOrderedColumn($params = null){
+        if($this->sanitized_column($params[':COLUMN'])) {
+            $col = $params[':COLUMN'];
+            if ($params[':ORDER'] === 'asc')
+                $games = $this->gameModel->gamesByOrdenAsc($col);
+            else
+                $games = $this->gameModel->gamesByOrdenDesc($col);
+        }
+        if ($games)
+            $this->view->response($games, 200);
+        else
+            $this->view->response('No content', 204);
+    }
+
+    public function getGames() { //No permite sql injection
+        try{
+            $sort = $_GET['sort'] ?? "id";
+            $order = $_GET['order'] ?? "asc";
+
+            if(!$this->sanitized_column($sort)||($order != "asc"&& $order!= "desc") )
+                $this->view->response("Datos erroneos", 400);
+
+            $games = $this->gameModel->gamesByOrden($sort, $order);
+            if(!empty($games)){
+                $this->view->response($games, 200);
+            }
+            else{
+                $this->view->response("El juego no existe", 404);
+            }
+        }catch(Exception $exc){
+            $this->view->response("Error interno del servidor", 500);
         }
     }
 
